@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import java.util.Date;
+
+import java.text.SimpleDateFormat;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -24,6 +27,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         setUpUI();
+
+        seekBar.setMax(mediaPlayer.getDuration());
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser){
+                    mediaPlayer.seekTo(progress);
+                }
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("mm:ss"); // Format of the song
+                int currentPos = mediaPlayer.getCurrentPosition();// hold the current position of media player
+                int duration = mediaPlayer.getDuration(); // hold the duration of the song
+
+                leftTime.setText(dateFormat.format(new Date(currentPos))); // Set beginning time for song
+                rightTime.setText(dateFormat.format(new Date(duration - currentPos))); // Set the end time for song
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     // Sets up all of our UI components
@@ -31,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.music);
+
 
         artistImage = (ImageView)findViewById(R.id.imageView);
         leftTime = (TextView)findViewById(R.id.leftTime);
