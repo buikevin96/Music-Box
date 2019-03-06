@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.Date;
 
 import java.text.SimpleDateFormat;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView rightTime;
     private SeekBar seekBar;
     private Button prevButton, playButton, nextButton;
+    private Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.prevButton:
-
+                prevMusic();
                 break;
 
             case R.id.playButton:
@@ -94,9 +97,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.nextButton:
-
-
+                nextMusic();
                 break;
+        }
+    }
+
+    // Take everything back to 0
+    public void prevMusic(){
+        if (mediaPlayer != null){
+            mediaPlayer.seekTo(0);
+            //Toast.makeText(MainActivity.this, "PREVIOUS", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void nextMusic(){
+        if (mediaPlayer != null) {
+            mediaPlayer.seekTo(mediaPlayer.getDuration() -1000);
+            //Toast.makeText(MainActivity.this, "NEXT", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -111,8 +128,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void startMusic(){
         if (mediaPlayer != null){
             mediaPlayer.start();
+            updateThread();
             playButton.setBackgroundResource(android.R.drawable.ic_media_pause);
         }
 
+    }
+
+    // Thread for when application starts with no component, a new linux process begins
+    // New thread to update our seekbar and other things in our application
+    public void updateThread(){
+        thread = new Thread(){
+            @Override
+            public void run() {
+
+                try {
+                    while (mediaPlayer != null && mediaPlayer.isPlaying()) {
+
+                        Thread.sleep(50);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // SeekBar follows the current Position of the song
+                                int newPosition = mediaPlayer.getCurrentPosition();
+                                int newMax = mediaPlayer.getDuration();
+                                seekBar.setMax(newMax); // New max of seekbar is the duration of the song
+                                seekBar.setProgress(newPosition); // The current position of the song is the current progress of the seekbar
+
+                                // Update the text
+                                leftTime.setText(String.valueOf(new java.text.SimpleDateFormat("mm:ss")
+                                        .format(new Date(mediaPlayer.getCurrentPosition()))));
+                                rightTime.setText(String.valueOf(new java.text.SimpleDateFormat("mm:ss")
+                                        .format(new Date(mediaPlayer.getDuration() - mediaPlayer.getCurrentPosition()))));
+                            }
+                        });
+                    }
+                } catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
     }
 }
