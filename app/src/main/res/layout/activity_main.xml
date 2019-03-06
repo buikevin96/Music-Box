@@ -16,13 +16,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/chief"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:srcCompat="@drawable/chief" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -78,7 +78,7 @@
         app:layout_constraintVertical_bias="0.036" />
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/mSeekBar"
         android:layout_width="match_parent"
         android:layout_height="16dp"
         android:layout_marginTop="8dp"
@@ -99,7 +99,7 @@
         android:text="0:00"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintTop_toBottomOf="@+id/mSeekBar"
         app:layout_constraintVertical_bias="0.014" />
 
     <TextView
@@ -117,7 +117,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/leftTime"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintTop_toBottomOf="@+id/mSeekBar"
         app:layout_constraintVertical_bias="0.064" />
 
     <TableRow
